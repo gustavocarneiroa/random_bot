@@ -1,47 +1,19 @@
-import { Client } from "tmi.js";
-import { getRandomIndex, getResponse } from "./common/utils";
+import { getRandomIndex, getResponse } from "../common/utils";
+import { Command, JSCondition, PriorityOption } from "../commands/command.entity"
+import { TwitchClient } from "../clients/twitch.client";
 
-
-interface PriorityOption {
-    priority: number;
-    message: string;
-}
-
-interface EventCommandProps {
-    client: Client;
-    channel: string;
-    command: string;
-    options: string[] | PriorityOption[];
-    type: string;
-    messages: string[];
-    default_target?: string;
-    blacklist?: string[];
-    blacklist_message?: string;
-    condition?: {
-        jsFunction: string;
-        positive: string;
-        negative: string;
-    };
-}
-
-class EventCommand {
+export class EventCommand {
     public channel: string;
     public command: string;
-    private client: Client;
     private options: string[] | PriorityOption[];
     private type: string;
-    private messages: string[];
+    public messages: string[];
     private default_target?: string;
     private blacklist: string[];
     private blacklist_message?: string;
-    private condition?: {
-        jsFunction: string;
-        positive: string;
-        negative: string;
-    };
+    private condition?: JSCondition;
 
-    constructor(props: EventCommandProps) {
-        this.client = props.client;
+    constructor(props: Command) {
         this.channel = props.channel;
         this.command = `!${props.command}`;
         this.options = props.options;
@@ -54,18 +26,11 @@ class EventCommand {
     }
 
     public execute({ user, target }: { user: string; target: string }): void {
-        const types: { [key: string]: () => string } = {
-            random: () => this.random(),
-            by_priority: () => this.by_priority(),
-            direct_messages: () => this.direct_messages(),
-            response: () => this.response(target ?? ""),
-        };
-
-        const result = this.type && types[this.type] ? types[this.type]() : "";
+        const result = this[this.type] ? this[this.type](target) : "";
         const messages = this.executeMessages(user, target, result);
 
         for (const message of messages) {
-            this.client.say(this.channel, message);
+            TwitchClient.say(this.channel, message);
         }
     }
 
@@ -100,6 +65,7 @@ class EventCommand {
 
     private response(target: string): string {
         const result = Math.random() < 0.5;
+        console.log(target)
         const responses = getResponse(target);
 
         return result ? responses.positive : responses.negative;
@@ -139,5 +105,3 @@ class EventCommand {
         });
     }
 }
-
-export { EventCommand };
