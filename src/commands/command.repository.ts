@@ -10,7 +10,7 @@ export class CommandRepository {
       const commandRepository = await connection.getMongoRepository(Command);
       const newCommand = commandRepository.create(command);
       await commandRepository.save(newCommand);
-  
+      
       return newCommand;
     }
     catch (err) {
@@ -59,7 +59,7 @@ export class CommandRepository {
       const commandRepository = await connection.getMongoRepository(Command);
       const command = await commandRepository.delete({
         channel: channel,
-        command: commandName.startsWith("!") ? commandName : ` !${commandName}`
+        command: commandName.startsWith("!") ? commandName : `!${commandName}`
       });
   
       return command;

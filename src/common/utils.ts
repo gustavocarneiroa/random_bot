@@ -17,7 +17,6 @@ function getRandomIndex(min: number, max: number) {
 }
 
 function getResponse(message: string) {
-    console.log(message)
     const hasOr = message.split(" ").includes("ou");
     if (hasOr) {
         const regex = /^(?:!eai(?: bot)? )?(.*?)(?: ou )(.*?)(?:\?)?$/;

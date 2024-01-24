@@ -11,7 +11,6 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.connect();
 
-
 function onConnectedHandler(address: string, port: number) {
     console.log(`* Connected to ${address}:${port}`);
 }
