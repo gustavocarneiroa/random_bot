@@ -1,10 +1,11 @@
-import { Command, baseCommandSchema, commandSchemasByType } from "./command.entity";
+import { Command } from "./command.entity";
+import { baseCommandSchema, commandSchemasByType, updatableSchema } from "./command.schema";
 import { CommandsService } from "./command.service";
 
 export class CommandsController {
     static async get(req, res) {
-            const commands = await CommandsService.get();
-            res.json(commands);
+        const commands = await CommandsService.get();
+        res.json(commands);
     }
 
     static async create(req, res) {
@@ -26,9 +27,16 @@ export class CommandsController {
     }
 
     static async update(req, res) {
-        const { channel, command, ...partialCommand } = req.body;
-        const updatedCommand = await CommandsService.update(command, channel, partialCommand as Partial<Command>);
-        res.json(updatedCommand)
+        try {
+            const { channel, command, ...partialCommand } = req.body;
+            updatableSchema.parse(partialCommand);
+            const updatedCommand = await CommandsService.update(command, channel, partialCommand as Partial<Command>);
+            res.json(updatedCommand)
+        } catch (err) {
+            res.json({
+                error: err?.message ?? "Unexpected error"
+            })
+        }
     }
 
     static async remove(req, res) {
