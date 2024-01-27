@@ -30,6 +30,12 @@ export class EventsRepository {
         return event
     }
 
+    static async update(topic: string, channel: string, props: Command) {
+        const updatedCommand = new EventCommand(props)
+        await EventEmitter.update(topic, channel, updatedCommand)
+
+        return updatedCommand
+    }
 
     static async remove(topic: string, channel: string) {
         EventEmitter.unsubscribe(topic, channel);

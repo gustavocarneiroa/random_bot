@@ -40,6 +40,12 @@ export class CommandsService {
         return event
     }
 
+    static async update(commandName: string, channel: string, command: Partial<Command>) {
+        const updatedCommand = await CommandRepository.update(commandName, channel, command);
+        await EventsRepository.update(commandName, channel, updatedCommand);
+        return updatedCommand;
+    }
+
     static async remove(commandName: string, channel: string) {
         const command = await CommandRepository.remove(commandName, channel);
         await EventsRepository.remove(commandName, channel);

@@ -20,6 +20,16 @@ export const EventEmitter = {
         for (const event of channelListeners) {
             event.execute(data);
         } 
+    },
+    update: (topic: string, channel: string, command: EventCommand) => {
+        topic = validatedStringStart(topic, "!");
+        const events = EventEmitter.events.get(topic);
+        for (const [index, event] of events.entries()) {
+            if(event.channel == channel) {
+                events[index] = command;
+            }   	
+        }
+        EventEmitter.events.set(topic, events);
     }
 }
 

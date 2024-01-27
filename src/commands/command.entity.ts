@@ -31,10 +31,12 @@ export const commandSchemasByType = {
     options: z.string().array().nonempty()
   }),
   by_priority: z.object({
-    options: z.object({
-      priority: z.number().min(-1).max(1).int(),
-      message: z.string()
-    })
+    options: z.array(
+      z.object({
+        priority: z.number().min(-1).max(1).int(),
+        message: z.string()
+      })
+    ) 
   }),
   direct_messages: z.object({
     options: z.union([z.null(), z.undefined()])

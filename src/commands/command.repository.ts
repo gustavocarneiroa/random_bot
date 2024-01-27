@@ -37,6 +37,30 @@ export class CommandRepository {
     }
   }
 
+  static async update(commandName: string, channel: string, command: Partial<Command>): Promise<Command> {
+    const connection = await ConnectionFactory.connect();
+    try {
+      const findOptions = {
+        command: commandName,
+        channel: channel
+      }
+      const commandRepository = await connection.getMongoRepository(Command);
+      await commandRepository.update(findOptions, command);
+
+      const lastUpdated = await commandRepository.findOne({
+        where: findOptions
+      });
+
+      return lastUpdated;
+    }
+    catch (err) {
+      console.error(err)
+    }
+    finally {
+      await connection.destroy()
+    }
+  }
+
   static async channels() {
     const connection = await ConnectionFactory.connect();
     try {
@@ -52,9 +76,6 @@ export class CommandRepository {
       await connection.destroy()
     }
   }
-
-  // !leon = nicegustavinho3
-  // > !leon > nicegustavinho3 (1)
 
   static async count(channel: string, commandName: string): Promise<number> {
     const connection = await ConnectionFactory.connect();

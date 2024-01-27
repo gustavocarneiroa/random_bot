@@ -25,6 +25,12 @@ export class CommandsController {
         }
     }
 
+    static async update(req, res) {
+        const { channel, command, ...partialCommand } = req.body;
+        const updatedCommand = await CommandsService.update(command, channel, partialCommand as Partial<Command>);
+        res.json(updatedCommand)
+    }
+
     static async remove(req, res) {
         const { channel, command } = req.body;
         const removedCommand = await CommandsService.remove(command, channel);
