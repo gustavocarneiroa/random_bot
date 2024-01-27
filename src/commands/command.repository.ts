@@ -59,7 +59,7 @@ export class CommandRepository {
       const commandRepository = await connection.getMongoRepository(Command);
       const command = await commandRepository.delete({
         channel: channel,
-        command: commandName.startsWith("!") ? commandName : `!${commandName}`
+        command: commandName,
       });
   
       return command;

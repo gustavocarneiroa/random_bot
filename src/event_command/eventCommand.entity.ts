@@ -26,7 +26,13 @@ export class EventCommand {
     }
 
     public execute({ user, target }: { user: string; target: string }): void {
-        const result = this[this.type] ? this[this.type](target) : "";
+        const options = {
+            random: () => this.random(),
+            by_priority: () => this.by_priority(),
+            direct_messages: () => this.direct_messages(),
+            response: () => this.response(target),
+        }
+        const result = options[this.type]?.() ?? "";
         const messages = this.executeMessages(user, target, result);
 
         for (const message of messages) {

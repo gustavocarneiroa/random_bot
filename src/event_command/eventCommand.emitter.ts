@@ -10,7 +10,7 @@ export const EventEmitter = {
     unsubscribe: (topic: string, channel: string) => {
         topic = validatedStringStart(topic, "!");
         const events = EventEmitter.events.get(topic) ?? [];
-        const filteredEvents = events.filter( event => event.channel === channel);
+        const filteredEvents = events.filter( event => event.channel !== channel);
         return EventEmitter.events.set(topic, filteredEvents)
     },
     emit: (topic: string, data: any) => {
