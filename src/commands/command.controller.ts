@@ -14,11 +14,14 @@ export class CommandsController {
             }
             const schema = baseCommandSchema.merge(commandSchemasByType[req.body.type]);
             schema.parse(props);
+            await CommandsService.validateUniqueness(props);
             const event = await CommandsService.create(props);
             res.json(event);
 
         } catch (err) {
-            res.json(err)
+            res.json({
+                error: err?.message ?? "Unexpected error"
+            })
         }
     }
 

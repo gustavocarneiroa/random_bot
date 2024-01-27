@@ -10,7 +10,7 @@ export class CommandRepository {
       const commandRepository = await connection.getMongoRepository(Command);
       const newCommand = commandRepository.create(command);
       await commandRepository.save(newCommand);
-      
+
       return newCommand;
     }
     catch (err) {
@@ -26,7 +26,7 @@ export class CommandRepository {
     try {
       const commandRepository = await connection.getMongoRepository(Command);
       const commands = await commandRepository.find(options);
-  
+
       return commands;
     }
     catch (err) {
@@ -42,7 +42,29 @@ export class CommandRepository {
     try {
       const commandRepository = await connection.getMongoRepository(Command);
       const command = await commandRepository.distinct("channel", {});
-  
+
+      return command;
+    }
+    catch (err) {
+      console.error(err)
+    }
+    finally {
+      await connection.destroy()
+    }
+  }
+
+  // !leon = nicegustavinho3
+  // > !leon > nicegustavinho3 (1)
+
+  static async count(channel: string, commandName: string): Promise<number> {
+    const connection = await ConnectionFactory.connect();
+    try {
+      const commandRepository = await connection.getMongoRepository(Command);
+      const command = await commandRepository.count({
+        channel: channel,
+        command: commandName,
+      });
+
       return command;
     }
     catch (err) {
@@ -61,7 +83,7 @@ export class CommandRepository {
         channel: channel,
         command: commandName,
       });
-  
+
       return command;
     }
     catch (err) {

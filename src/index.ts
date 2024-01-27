@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(CommandRouter);
 
 
-setTimeout(() => CommandsService.sync(), 5000);
+setTimeout(() => CommandsService.sync(), 3000);
 
 const port = process.env.PORT;
 app.listen(port, () => console.log(`Connected at ${port}`))

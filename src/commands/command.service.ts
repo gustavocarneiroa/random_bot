@@ -26,6 +26,13 @@ export class CommandsService {
         }
     }
 
+    static async validateUniqueness(props: Command) {
+        const countCommands = await CommandRepository.count(props.channel, props.command);
+        if(countCommands > 0) {
+            throw new Error("commands_already_exists_on_channel");
+        }
+    }
+
     static async create(props: Command): Promise<EventCommand> {
         const command = await CommandRepository.insert(props);
         const event = await EventsRepository.create(command.command, command);
