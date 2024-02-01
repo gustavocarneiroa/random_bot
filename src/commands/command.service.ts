@@ -3,8 +3,16 @@ import { EventCommand } from "../event_command/eventCommand.entity";
 import { CommandRepository } from "./command.repository";
 import { EventsRepository } from "../event_command/eventCommand.repository";
 
+
+type CommandList = {
+    command: string;
+    data: {
+        channel: string;
+        messages: string[];
+    }[]
+}
 export class CommandsService {
-    static async get(): Promise<any[]> {
+    static async get(): Promise<CommandList[]> {
         return await EventsRepository.showCommands()
     }
 
@@ -36,7 +44,11 @@ export class CommandsService {
     static async create(props: Command): Promise<EventCommand> {
         const command = await CommandRepository.insert(props);
         const event = await EventsRepository.create(command.command, command);
-        await EventsRepository.join(command.channel);
+        try {
+            await EventsRepository.join(command.channel);
+        } catch (err) {
+            console.error(err)
+        }
         return event
     }
 
