@@ -27,7 +27,7 @@ export class CommandsService {
             }
             channels = [...new Set(channels)];
             for (const channel of channels) {
-                await EventsRepository.join(channel);
+                await EventsRepository.join(channel, "twitch");
             }
         } catch (e) {
             console.log(e)
@@ -45,7 +45,7 @@ export class CommandsService {
         const command = await CommandRepository.insert(props);
         const event = await EventsRepository.create(command.command, command);
         try {
-            await EventsRepository.join(command.channel);
+            await EventsRepository.join(command.channel, "twitch");
         } catch (err) {
             console.error(err)
         }

@@ -1,6 +1,6 @@
 import { getRandomIndex, getResponse } from "../common/utils";
 import { Command, JSCondition, PriorityOption } from "../commands/command.entity"
-import { TwitchClient } from "../clients/twitch.client";
+import { MessageGateway } from "../gateways/MessageGateways";
 
 export class EventCommand {
     public channel: string;
@@ -25,7 +25,7 @@ export class EventCommand {
         this.condition = props.condition;
     }
 
-    public execute({ user, target }: { user: string; target: string }): void {
+    public execute({ user, target, gateway }: { user: string; target: string, gateway: string }): void {
         const options = {
             random: () => this.random(),
             by_priority: () => this.by_priority(),
@@ -36,7 +36,10 @@ export class EventCommand {
         const messages = this.executeMessages(user, target, result);
 
         for (const message of messages) {
-            TwitchClient.say(this.channel, message);
+            const messageGateway = MessageGateway.get(gateway);
+            if (messageGateway) {
+                messageGateway.sendMessage(this.channel, message);
+            }
         }
     }
 

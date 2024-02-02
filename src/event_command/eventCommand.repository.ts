@@ -1,7 +1,7 @@
 import { Command } from "../commands/command.entity";
 import { EventCommand } from "./eventCommand.entity";
 import { EventEmitter } from "./eventCommand.emitter";
-import { TwitchClient } from "../clients/twitch.client";
+import { MessageGateway } from "../gateways/MessageGateways";
 
 export class EventsRepository {
     static async showCommands() {
@@ -43,7 +43,8 @@ export class EventsRepository {
         return {}
     }
 
-    static async join(channel: string) {
-        await TwitchClient.join(channel)
+    static async join(channel: string, gateway: string) {
+        const messageGateway = MessageGateway.get(gateway);
+        await messageGateway?.join?.(channel)
     }
 }

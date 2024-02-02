@@ -1,5 +1,6 @@
 import { DataSource, DataSourceOptions, EntityTarget, MongoRepository } from "typeorm"
 import { Command } from "../commands/command.entity"
+import { GatewayConverter } from "../gateways/GatewayConverter.entity";
 
 
 export default class ConnectionFactory {
@@ -10,7 +11,7 @@ export default class ConnectionFactory {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             logging: true,
-            entities: [Command]
+            entities: [Command, GatewayConverter]
         }
     }
 

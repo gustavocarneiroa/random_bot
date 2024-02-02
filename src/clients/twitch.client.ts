@@ -1,6 +1,7 @@
 import * as tmi from "tmi.js"
 import { EventEmitter } from "../event_command/eventCommand.emitter";
 import { CommandsService } from "../commands/command.service";
+import { IGateway } from "../gateways/MessageGateways";
 const opts: tmi.Options = {
     options: { debug: true },
     identity: { username: process.env.BOT_USER, password: process.env.BOT_AUTH },
@@ -42,9 +43,19 @@ function onMessageHandler(channel: string, userstate: any, message: string, self
 
     EventEmitter.emit(messageInfo.command, {
         origin: channel,
+        gateway: "twitch",
         user: messageInfo.username,
         target: messageInfo.target,
     });
 }
 
 export const TwitchClient = client;
+export class TwitchGateway implements IGateway {
+    public sendMessage(channel: string, message: string): void {
+        client.say(channel, message)
+    }
+
+    public join(channel: string) {
+        client.join(channel)
+    }
+}

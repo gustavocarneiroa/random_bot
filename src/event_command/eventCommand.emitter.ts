@@ -16,7 +16,7 @@ export const EventEmitter = {
     emit: (topic: string, data: any) => {
         topic = validatedStringStart(topic, "!");
         const topicListeners = EventEmitter.events.get(topic) ?? [];
-        const channelListeners = topicListeners.filter( event => data.origin === validatedStringStart(event.channel, "#"));
+        const channelListeners = topicListeners.filter( event => validatedStringStart(data.origin, "#") === validatedStringStart(event.channel, "#"));
         for (const event of channelListeners) {
             event.execute(data);
         } 
