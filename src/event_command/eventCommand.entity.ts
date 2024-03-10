@@ -25,7 +25,7 @@ export class EventCommand {
         this.condition = props.condition;
     }
 
-    public execute({ user, target, gateway }: { user: string; target: string, gateway: string }): void {
+    public execute({ user, origin, target, gateway }: { user: string; target: string, gateway: string, origin: string }): void {
         const options = {
             random: () => this.random(),
             by_priority: () => this.by_priority(),
@@ -37,8 +37,9 @@ export class EventCommand {
 
         for (const message of messages) {
             const messageGateway = MessageGateway.get(gateway);
+            const channel = MessageGateway.validateChannel(this.channel, origin);
             if (messageGateway) {
-                messageGateway.sendMessage(this.channel, message);
+                messageGateway.sendMessage(channel, message);
             }
         }
     }
@@ -74,7 +75,6 @@ export class EventCommand {
 
     private response(target: string): string {
         const result = Math.random() < 0.5;
-        console.log(target)
         const responses = getResponse(target);
 
         return result ? responses.positive : responses.negative;

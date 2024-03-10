@@ -16,7 +16,7 @@ export const EventEmitter = {
     emit: (topic: string, data: any) => {
         topic = validatedStringStart(topic, "!");
         const topicListeners = EventEmitter.events.get(topic) ?? [];
-        const channelListeners = topicListeners.filter( event => validatedStringStart(data.origin, "#") === validatedStringStart(event.channel, "#"));
+        const channelListeners = topicListeners.filter( event => validateChannel(event, data.origin));
         for (const event of channelListeners) {
             event.execute(data);
         } 
@@ -40,4 +40,11 @@ function validatedStringStart(text: string, startsWith: string): string {
     }
 
     return text
+}
+
+function validateChannel(event: EventCommand, origin: string) {
+    if (origin.endsWith("@c.us") || origin.endsWith("@g.us")) {
+        origin = "whatsapp";
+    }
+    return validatedStringStart(origin, "#") === validatedStringStart(event.channel, "#")
 }

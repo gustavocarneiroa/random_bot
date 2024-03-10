@@ -2,6 +2,7 @@ import * as tmi from "tmi.js"
 import { EventEmitter } from "../event_command/eventCommand.emitter";
 import { CommandsService } from "../commands/command.service";
 import { IGateway } from "../gateways/MessageGateways";
+import { BattleController, _battleCommands } from "../static_commands/battle.controller";
 const opts: tmi.Options = {
     options: { debug: true },
     identity: { username: process.env.BOT_USER, password: process.env.BOT_AUTH },
@@ -41,12 +42,18 @@ function onMessageHandler(channel: string, userstate: any, message: string, self
         [,messageInfo.command, messageInfo.target] = regexMessageCorrespondence ?? [];
     }
 
-    EventEmitter.emit(messageInfo.command, {
+    const data = {
         origin: channel,
         gateway: "twitch",
         user: messageInfo.username,
         target: messageInfo.target,
-    });
+    }
+    if(_battleCommands.includes(messageInfo.command)) {
+        BattleController.handleCommand(messageInfo.command, data)
+        return;
+    }
+
+    EventEmitter.emit(messageInfo.command, data);
 }
 
 export const TwitchClient = client;

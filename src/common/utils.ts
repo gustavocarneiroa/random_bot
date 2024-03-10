@@ -34,7 +34,12 @@ function getResponse(message: string) {
     }
 }
 
+function d(value) {
+    return Math.floor(Math.random() * value) + 1
+}
+
 export {
+    d,
     percentage,
     shuffleArray,
     getResponse,
