@@ -3,6 +3,7 @@ import { EventEmitter } from "../event_command/eventCommand.emitter";
 import { CommandsService } from "../commands/command.service";
 import { IGateway } from "../gateways/MessageGateways";
 import { BattleController, _battleCommands } from "../static_commands/battle.controller";
+import { BlackjackController, _blackjackCommands } from "../static_commands/blackjack.controller";
 const opts: tmi.Options = {
     options: { debug: true },
     identity: { username: process.env.BOT_USER, password: process.env.BOT_AUTH },
@@ -50,6 +51,10 @@ function onMessageHandler(channel: string, userstate: any, message: string, self
     }
     if(_battleCommands.includes(messageInfo.command)) {
         BattleController.handleCommand(messageInfo.command, data)
+        return;
+    }
+    if(_blackjackCommands.includes(messageInfo.command)) {
+        BlackjackController.handleCommand(messageInfo.command, data)
         return;
     }
 

@@ -30,7 +30,7 @@ export class Battle {
             this.player1.joinAs(playerId);
             this.players[playerId] = this.player1;
             this.playerIds.push(playerId)
-            return `${playerId} criou uma batalha. Digite !accept para participar. Limite de 1 oponente.`;
+            return `${playerId} criou uma batalha. Digite !accept ${playerId} para participar. Limite de 1 oponente.`;
         } 
         if (!this.player2.isSetted()) {
             this.player2.joinAs(playerId);
